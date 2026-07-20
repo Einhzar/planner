@@ -28,6 +28,6 @@ Aplikasi ini dirancang menggunakan JavaScript ES6+ dengan struktur OOP sebagai b
 ---
 
 ## 👤 Pembuat
-* **Nama:** [Nama Kamu]
-* **NIM:** [NIM Kamu]
-* **Kelas:** [Kelas/Mata Kuliah PBO]
+* **Nama:** Dimas Abiyyu Febriyan
+* **NIM:** 2024150145
+* **Kelas:** 6/Mata Kuliah PBO
