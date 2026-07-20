@@ -2,8 +2,7 @@
 
 Aplikasi web sederhana untuk mengelola daftar tugas harian dan pencatatan pengeluaran yang dibangun dengan menerapkan 4 Pilar Utama **Pemrograman Berorientasi Objek (PBO)**.
 
-🔗 **Demo Live / Deployment:** https://github.com/Einhzar/planner.git
-
+🔗 **Demo Live / Deployment:**  https://einhzar.github.io/planner/
 ---
 
 ## 💡 Penerapan Pilar OOP
