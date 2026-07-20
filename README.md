@@ -1,2 +1,2 @@
 # planner
-aplikasi pencatatan simple
+aplikasi pencatatan simple dengan menerapkan struktur penggunaan OOP
