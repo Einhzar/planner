@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>OOP Simple Planner</title>
+  <style>
+    body { font-family: sans-serif; max-width: 500px; margin: 20px auto; padding: 10px; }
+    .box { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; }
+    .item button { color: red; border: none; background: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- Judul Baru di Sini -->
+  <h1>Planner Harian & Keuangan</h1>
+
+  <!-- SECTION 1: TODO -->
+  <div class="box">
+    <h3>1. Daftar Tugas</h3>
+    <input type="text" id="input-todo" placeholder="Tugas baru...">
+    <button onclick="app.tambahTodo()">Tambah</button>
+    <div id="list-todo"></div>
+  </div>
+
+  <!-- SECTION 2: EXPENSE -->
+  <div class="box">
+    <h3>2. Pengeluaran</h3>
+    <input type="text" id="input-exp-name" placeholder="Nama barang...">
+    <input type="number" id="input-exp-amount" placeholder="Harga (Rp)...">
+    <button onclick="app.tambahPengeluaran()">Tambah</button>
+    <div id="list-expense"></div>
+  </div>
+
+<script>
+/* ==========================================================
+   1. ABSTRACTION (Abstraksi)
+   Class induk abstrak yang menyimpan data umum (Judul/Nama)
+   ========================================================== */
+class Item {
+  #id;    // Private
+  #judul; // Private
+
+  constructor(judul) {
+    if (this.constructor === Item) throw new Error("Class Item tidak bisa diinstansiasi langsung!");
+    this.#id = Date.now() + Math.random();
+    this.#judul = judul;
+  }
+
+  // Encapsulation: Getter
+  getId() { return this.#id; }
+  getJudul() { return this.#judul; }
+
+  // Abstract Method (harus dibuat ulang di class anak)
+  render() { throw new Error("Method render() wajib diisi!"); }
+}
+
+/* ==========================================================
+   2. INHERITANCE & 3. POLYMORPHISM (Daftar Tugas)
+   ========================================================== */
+class TodoItem extends Item {
+  constructor(judul) {
+    super(judul); // Mengambil property judul dari class Item
+  }
+
+  // Polymorphism: Implementasi render khusus Todo
+  render() {
+    return `
+      <div class="item">
+        <span>📌 ${this.getJudul()}</span>
+        <button onclick="app.hapusTodo(${this.getId()})">Hapus</button>
+      </div>
+    `;
+  }
+}
+
+/* ==========================================================
+   2. INHERITANCE & 3. POLYMORPHISM (Pengeluaran)
+   ========================================================== */
+class ExpenseItem extends Item {
+  #nominal; // Private
+
+  constructor(judul, nominal) {
+    super(judul); // Mengambil property judul dari class Item
+    this.#nominal = nominal;
+  }
+
+  // Encapsulation
+  getNominal() { return this.#nominal; }
+
+  // Polymorphism: Implementasi render khusus Pengeluaran
+  render() {
+    return `
+      <div class="item">
+        <span>💸 ${this.getJudul()} - Rp${this.#nominal.toLocaleString('id-ID')}</span>
+        <button onclick="app.hapusPengeluaran(${this.getId()})">Hapus</button>
+      </div>
+    `;
+  }
+}
+
+/* ==========================================================
+   4. ENCAPSULATION (Aplikasi Utama)
+   Menyimpan daftar array secara terproteksi
+   ========================================================== */
+class MainApp {
+  #daftarTodo = [];
+  #daftarPengeluaran = [];
+
+  // Logic Todo
+  tambahTodo() {
+    const input = document.getElementById('input-todo');
+    if (!input.value.trim()) return;
+
+    this.#daftarTodo.push(new TodoItem(input.value));
+    input.value = '';
+    this.renderAll();
+  }
+
+  hapusTodo(id) {
+    this.#daftarTodo = this.#daftarTodo.filter(item => item.getId() !== id);
+    this.renderAll();
+  }
+
+  // Logic Pengeluaran
+  tambahPengeluaran() {
+    const inputName = document.getElementById('input-exp-name');
+    const inputAmount = document.getElementById('input-exp-amount');
+
+    if (!inputName.value || !inputAmount.value) return;
+
+    this.#daftarPengeluaran.push(new ExpenseItem(inputName.value, Number(inputAmount.value)));
+    inputName.value = '';
+    inputAmount.value = '';
+    this.renderAll();
+  }
+
+  hapusPengeluaran(id) {
+    this.#daftarPengeluaran = this.#daftarPengeluaran.filter(item => item.getId() !== id);
+    this.renderAll();
+  }
+
+  // Tampilkan ke layar
+  renderAll() {
+    // Render List Todo
+    document.getElementById('list-todo').innerHTML = 
+      this.#daftarTodo.map(item => item.render()).join('');
+
+    // Render List Pengeluaran
+    document.getElementById('list-expense').innerHTML = 
+      this.#daftarPengeluaran.map(item => item.render()).join('');
+  }
+}
+
+// Jalankan Sistem
+const app = new MainApp();
+</script>
+
+</body>
+</html>
